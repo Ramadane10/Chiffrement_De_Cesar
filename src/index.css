@@ -61,12 +61,12 @@ html, body {
   margin-bottom: 40px;
 }
 
-.header .mode {
+/* .header .mode {
     height: 30px;
     padding: 10px;
     border-radius: 10px;
     border: none;
-}
+} */
 
 h1 {
   color: #333333;
@@ -254,4 +254,18 @@ textarea:focus, input[type="number"]:focus {
 .dark-mode .historique-item em,
 .dark-mode .historique-item small {
   color: white;
+}
+
+.historique-section {
+  display: flex;
+  gap: 5px;
+}
+
+.historique-section .btn-exporter, .header .mode {
+  font-size: 1rem;
+  height: 2.6rem;
+  border: none;
+  padding: 10px;
+  border-radius: 7px;
+  margin-top: 10px;
 }

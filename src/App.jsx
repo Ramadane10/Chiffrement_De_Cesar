@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import "./index.css";
-import { FaMoon, FaSun } from 'react-icons/fa'; // Import des icônes
+import { Header } from "./Header";
+import { Textarea } from "./Textarea";
+import { Decalage } from "./Decalage";
+import { TraitementButton } from "./TraitementButton";
+import { Resultat } from "./Resultat";
+import { Sidebar } from "./Sidebar";
 
-export default function App() {
+function App() {
   const [texte, setTexte] = useState("");
   const [decalage, setDecalage] = useState(0);
   const [resultat, setResultat] = useState("");
   const [afficherHistorique, setAfficherHistorique] = useState(false);
-  const [filtres, setFiltres] = useState({ Tous: true, Chiffrement: false, Déchiffrement: false });
+  const [filtres, setFiltres] = useState({
+    Tous: true,
+    Chiffrement: false,
+    Déchiffrement: false,
+  });
   const [modeChiffrement, setModeChiffrement] = useState(true);
   const [modeSombre, setModeSombre] = useState(false);
 
@@ -52,7 +61,12 @@ export default function App() {
   };
 
   const exporterHistorique = () => {
-    const contenu = historique.map(entree => `Date: ${entree.date}\nType: ${entree.type}\nDécalage: ${entree.decalage}\nTexte original: ${entree.original}\nRésultat: ${entree.resultat}\n--------------------\n`).join("\n");
+    const contenu = historique
+      .map(
+        (entree) =>
+          `Date: ${entree.date}\nType: ${entree.type}\nDécalage: ${entree.decalage}\nTexte original: ${entree.original}\nRésultat: ${entree.resultat}\n--------------------\n`
+      )
+      .join("\n");
     const blob = new Blob([contenu], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -72,79 +86,38 @@ export default function App() {
 
   const handleCheckboxChange = (e) => {
     const { name } = e.target;
-    setFiltres({ Tous: false, Chiffrement: false, Déchiffrement: false, [name]: true });
+    setFiltres({
+      Tous: false,
+      Chiffrement: false,
+      Déchiffrement: false,
+      [name]: true,
+    });
   };
 
   return (
     <div className={`application ${modeSombre ? "dark-mode" : ""}`}>
-      <div className="header">
-        <button className="mode" onClick={() => setModeSombre(!modeSombre)}>{modeSombre ? <FaSun /> : <FaMoon />}</button>
-        <h1>🔒 Chiffrement De César 🔑</h1>
-        <button className="btn-historique" onClick={() => setAfficherHistorique(true)}>
-          🗑️ Historique
-        </button>
-      </div>
-      <textarea
-        placeholder="Entrez votre texte ici..."
-        value={texte}
-        onChange={(e) => setTexte(e.target.value)}
+      <Header
+        modeSombre={modeSombre}
+        setModeSombre={setModeSombre}
+        setAfficherHistorique={setAfficherHistorique}
+        exporterHistorique={exporterHistorique}
       />
-
-      <input
-        type="number"
-        placeholder="Décalage"
-        value={decalage}
-        onChange={(e) => setDecalage(Number(e.target.value))}
+      <Textarea texte={texte} setTexte={setTexte} />
+      <Decalage decalage={decalage} setDecalage={setDecalage} />
+      <TraitementButton
+        traiterTexte={traiterTexte}
+        modeChiffrement={modeChiffrement}
       />
-
-      <div className="boutons">
-        <button onClick={traiterTexte}>{modeChiffrement ? "Chiffrer 🔒" : "Déchiffrer 🔓"}</button>
-      </div>
-
-      <div className="resultat">
-        <h2>Résultat :</h2>
-        <p>{resultat}</p>
-      </div>
-
-      {/* <button className="btn-historique" onClick={() => setAfficherHistorique(true)}>
-        📂 Historique
-      </button> */}
-
-      <div className={`sidebar ${afficherHistorique ? "active" : ""}`}>
-      <button className="btn-fermer" onClick={() => setAfficherHistorique(false)}>❌</button>
-        <h2>Historique des opérations</h2>
-        <button className="btn-exporter" onClick={exporterHistorique}>📤 Exporter</button>
-        <div className="filtres">
-          <label>
-            <input type="checkbox" name="Tous" checked={filtres.Tous} onChange={handleCheckboxChange} />
-            Tous
-          </label>
-          <label>
-            <input type="checkbox" name="Chiffrement" checked={filtres.Chiffrement} onChange={handleCheckboxChange} />
-            Chiffrer
-          </label>
-          <label>
-            <input type="checkbox" name="Déchiffrement" checked={filtres.Déchiffrement} onChange={handleCheckboxChange} />
-            Déchiffrer
-          </label>
-        </div>
-
-        {historique.filter(filtrerHistorique).length === 0 ? (
-          <p>Aucune opération à afficher.</p>
-        ) : (
-          <ul className="historique-list">
-            {historique.filter(filtrerHistorique).map((entree, index) => (
-              <li key={index} className="historique-item">
-                <strong>{entree.type}</strong> (Décalage: {entree.decalage})<br />
-                <em>Texte original :</em> {entree.original}<br />
-                <em>Résultat :</em> {entree.resultat}<br />
-                <small>{entree.date}</small>
-              </li>
-            ))}
-          </ul>
-        )}
-        <button className="btn-reset" onClick={viderHistorique}>Vider historique</button>
-      </div>
+      <Resultat resultat={resultat} />
+      <Sidebar
+        afficherHistorique={afficherHistorique}
+        setAfficherHistorique={setAfficherHistorique}
+        historique={historique}
+        filtrerHistorique={filtrerHistorique}
+        filtres={filtres}
+        handleCheckboxChange={handleCheckboxChange}
+        viderHistorique={viderHistorique}
+      />
     </div>
   );
 }
@@ -157,3 +130,5 @@ function chiffrementCesar(texte, decalage) {
     );
   });
 }
+
+export default App;
