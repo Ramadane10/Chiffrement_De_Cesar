@@ -13,7 +13,7 @@ export function Header({
       <button className="mode" onClick={() => setModeSombre(!modeSombre)}>
         {modeSombre ? <FaSun /> : <FaMoon />}
       </button>
-      <h1> CrypteMe </h1>
+      <h1> CryptMe </h1>
       <div className="historique-section">
         <button
           className="btn-historique"
