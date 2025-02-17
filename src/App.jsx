@@ -29,18 +29,31 @@ function App() {
     localStorage.setItem("historiqueChiffrement", JSON.stringify(historique));
   }, [historique]);
 
+  // const traiterTexte = () => {
+  //   if (modeChiffrement) {
+  //     const texteChiffre = chiffrementCesar(texte, decalage);
+  //     setResultat(texteChiffre);
+  //     setTexte(texteChiffre);
+  //     ajouterAHistorique("Chiffrement", texte, texteChiffre, decalage);
+  //   } else {
+  //     const texteDechiffre = chiffrementCesar(texte, -decalage);
+  //     setResultat(texteDechiffre);
+  //     setTexte(texteDechiffre);
+  //     ajouterAHistorique("Déchiffrement", texte, texteDechiffre, decalage);
+  //   }
+  // };
+
   const traiterTexte = () => {
+    let texteTransforme;
     if (modeChiffrement) {
-      const texteChiffre = chiffrementCesar(texte, decalage);
-      setResultat(texteChiffre);
-      setTexte(texteChiffre);
-      ajouterAHistorique("Chiffrement", texte, texteChiffre, decalage);
+      texteTransforme = chiffrementCesar(texte, decalage);
+      ajouterAHistorique("Chiffrement", texte, texteTransforme, decalage);
     } else {
-      const texteDechiffre = chiffrementCesar(texte, -decalage);
-      setResultat(texteDechiffre);
-      setTexte(texteDechiffre);
-      ajouterAHistorique("Déchiffrement", texte, texteDechiffre, decalage);
+      texteTransforme = chiffrementCesar(texte, -decalage);
+      ajouterAHistorique("Déchiffrement", texte, texteTransforme, decalage);
     }
+    setResultat(texteTransforme);
+    setTexte(texteTransforme);
     setModeChiffrement(!modeChiffrement);
   };
 
@@ -94,6 +107,11 @@ function App() {
     });
   };
 
+  const vider = () => {
+    setTexte("");
+    setResultat("");
+    setDecalage(0);
+  }
   return (
     <div className={`application ${modeSombre ? "dark-mode" : ""}`}>
       <Header
@@ -102,12 +120,35 @@ function App() {
         setAfficherHistorique={setAfficherHistorique}
         exporterHistorique={exporterHistorique}
       />
+      {/* Ajout des boutons radio */}
+      <div className="mode-selection">
+        <label>
+          <input
+            type="radio"
+            name="mode"
+            value="chiffrement"
+            checked={modeChiffrement}
+            onChange={() => setModeChiffrement(true)}
+          />
+          Chiffrer
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="mode"
+            value="dechiffrement"
+            checked={!modeChiffrement}
+            onChange={() => setModeChiffrement(false)}
+          />
+          Déchiffrer
+        </label>
+      </div>
       <Textarea texte={texte} setTexte={setTexte} />
       <Decalage decalage={decalage} setDecalage={setDecalage} />
-      <TraitementButton
-        traiterTexte={traiterTexte}
-        modeChiffrement={modeChiffrement}
-      />
+
+      
+
+      <TraitementButton traiterTexte={traiterTexte} modeChiffrement={modeChiffrement} vider={vider}/>
       <Resultat resultat={resultat} />
       <Sidebar
         afficherHistorique={afficherHistorique}

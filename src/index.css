@@ -269,3 +269,21 @@ textarea:focus, input[type="number"]:focus {
   border-radius: 7px;
   margin-top: 10px;
 }
+
+
+.mode-selection {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.mode-selection label {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type="radio"] {
+  margin-right: 5px;
+}
+
